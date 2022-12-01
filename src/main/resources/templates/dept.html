@@ -23,6 +23,19 @@ tr:nth-child(even) {
 </head>
 <body>
 
+	<input id="deptno" type="text" placeholder = "부서 번호 입력해주세요"/>
+	<input id="dname" type="text" placeholder = "부서 이름 입력해주세요"/>
+	<input id="loc" type="text" placeholder = "부서 위치 입력해주세요"/>
+	<button type="button" onclick="join()">부서추가</button>
+	
+	
+	<input id="d_deptno" type="text" placeholder = "부서 번호 입력"/>
+	<button type="button" onclick="doDelete()">지워</button>
+	
+	<input id="u_deptno" type="text" placeholder = "부서 번호 입력해주세요"/>
+	<input id="u_dname" type="text" placeholder = "부서 이름 입력해주세요"/>
+	<input id="u_loc" type="text" placeholder = "부서 위치 입력해주세요"/>
+	<button type="button" onclick="doUpdate()">부서 수정</button>
 
 	<table id="dept">
 	  <tr>
@@ -66,7 +79,74 @@ tr:nth-child(even) {
 	    	  	  }	
 	    	  }
 	      });
+
 	}
+	function join(){
+		
+		var deptno = $('#deptno').val();
+		var dname = $('#dname').val();
+		var loc = $('#loc').val();
+		
+		var data = {
+				"deptno" : deptno,
+				"dname" : dname,
+				"loc" : loc
+				
+		}
+		$.ajax({
+			url : '/api/v1/dept/join',
+			type : 'POST',
+			contentType : 'application/json',
+			data : JSON.stringify(data),
+			dataType : 'json',
+			success : function(response){
+				alert("부서추가");
+				location.reload();
+			}
+		});
+	}
+	
+	function doDelete(){
+		
+		var deptno = $('#d_deptno').val();
+		
+		$.ajax({
+ 	        url: '/api/v1/dept/'+deptno,
+ 	        type : 'DELETE',
+ 	        dataType: 'json',
+ 		    success: function (response) {
+ 		        	alert("부서 삭제");
+ 		        	location.reload(); // 강제 새로고침
+ 		        }
+         });
+	}
+	
+	function doUpdate(){
+		
+		var deptno = $('#u_deptno').val();
+		var dname = $('#u_dname').val();
+		var loc = $('#u_loc').val();
+		
+		var data = {
+				"deptno" : deptno,
+				"dname" : dname,
+				"loc" : loc
+				
+		}
+		$.ajax({
+			url : '/api/v1/dept',
+			type : 'PATCH',
+			contentType : 'application/json',
+			data : JSON.stringify(data),
+			dataType : 'json',
+			success : function(response){
+				alert("부서 수정");
+				location.reload();
+			}
+		});
+		
+	}
+	
 
 
 </script>

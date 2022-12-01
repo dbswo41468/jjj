@@ -46,12 +46,12 @@ public class PageController {
 		return "login";
 	}
 	
-	@GetMapping("/login2")
-	public String callLogin2Page(HttpServletRequest request) {
-		String ip = request.getRemoteAddr(); // IP 추적
-		System.out.println("요청 받은 IP : "+ ip);
-		return "login2";
-	}
+//	@GetMapping("/dept")
+//	public String callLogin2Page(HttpServletRequest request) {
+//		String ip = request.getRemoteAddr(); // IP 추적
+//		System.out.println("요청 받은 IP : "+ ip);
+//		return "dept";
+//	}
 	
 	@GetMapping("/emp")
 	public String callEmpPage() {

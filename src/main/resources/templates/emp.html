@@ -30,6 +30,17 @@ tr:nth-child(even) {
 <input id="sal" type="text" placeholder = "사원급여를 입력해주세요"/>
 <button type="button" onclick="join()">사원추가</button>
 	
+	<h3>사원 삭제</h3>
+
+	<input id="d_empno" type="text" placeholder = " 사원번호를 입력해주세요..."/>
+	<button type ="button" onclick="doDelete()">에라이~잘 죽었다 잘가라</button>
+	
+	<input id="u_empno" type="text" placeholder = "사원번호를 입력해주세요"/>
+	<input id="u_job" type="text" placeholder = "사원직책를 입력해주세요"/>
+	<input id="u_sal" type="text" placeholder = "사원급여를 입력해주세요"/>
+	<button type="button" onclick="doUpdata()">수정</button>
+
+
 
 	<table id="emp">
 	  <tr>
@@ -112,6 +123,67 @@ tr:nth-child(even) {
 		
 		
 	}
+	
+	function doDelete(){
+		// 문제1. 사원번호가 9999 넘으면 '잘못된 사원번호 입니다' alert 출력 
+		// 제이쿼리 : $('#d_empno').val();
+		// 바닐라 스크립트 : document.getElementById("d_empno").value;
+		var empno = $('#d_empno').val();
+		
+		if(empno == "" ){
+			alert("잘못된 사원번호입니다");
+			$("#d_empno").focus();
+			$("#d_empno").val('');
+			return false;
+		}
+		if(empno > 9999){
+			alert("사원번호는 9999이하로 입력해주세요");
+			$("#d_empno").focus();
+			$("#d_empno").val('');
+			return false;
+		}
+		
+		$.ajax({
+ 	        url: '/api/v1/emp/'+empno,
+ 	        type : 'DELETE',
+ 	        dataType: 'json',
+ 		    success: function (response) {
+ 		        	console.log(response); 
+ 		        	alert("사원 삭제");
+ 		        	location.reload(); // 강제 새로고침
+ 		        }
+         });
+		
+	}
+	
+	function doUpdata(){
+		var empno =  $('#u_empno').val();
+		var sal = $('#u_sal').val();
+		var job = $('#u_job').val();
+		
+		var jsonData = {
+				"empno" : empno,
+				"sal" : sal,
+				"job" : job
+		};
+		
+		$.ajax({
+ 	        url: '/api/v1/emp',
+ 	        type : 'PATCH',
+ 	        contentType : 'application/json', // 서버에 json 타입으로 보낼 예정 (요청)
+ 	        data : JSON.stringify(jsonData),
+ 	        dataType: 'json',
+ 		    success: function (response) {
+ 		        	alert("사원 수정 완료");
+ 		        	location.reload(); // 강제 새로고침
+ 		        }
+         });
+	}
+	
+	
+	
+	
+	
 
 
 </script>

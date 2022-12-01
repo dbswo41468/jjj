@@ -19,7 +19,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -175,8 +177,32 @@ public class ApiController {
 		
 	}
 	
+	// URL 이름이 같지만 @ 이름이 다르기 때문에 괜찮다
+	@DeleteMapping("/api/v1/emp/{empno}")
+	public int callEmpDelete(@PathVariable int empno){
+		return empMapper.deleteEmp(empno);
+	}
 	
+	@PostMapping("/api/v1/dept/join")
+	public int callEmpjoin(@RequestBody DeptVO dept ) {
+		return empMapper.insertDept(dept);
+		
+	}
 	
+	@DeleteMapping("/api/v1/dept/{deptno}")
+	public int callDeptDelete(@PathVariable int deptno){
+		return empMapper.deleteDept(deptno);
+	}
 	
+	// updata == patch
+	@PatchMapping("/api/v1/emp")
+	public int callEmpUpdate(@RequestBody EmpVo emp) {
+		return empMapper.updateEmp(emp);
+	}
+	
+	@PatchMapping("/api/v1/dept")
+	public int callDeptUpdate(@RequestBody DeptVO deptno) {
+		return empMapper.updateDept(deptno);
+	}
 	
 }
