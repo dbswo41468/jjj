@@ -84,5 +84,66 @@
 	
 	</update>
 	
+	<!-- 회원가입 SQL 작성 -->
+	<insert id="insertUsers">
+	
+		INSERT INTO users (id,pw,name) VALUES (#{id},#{pw},#{name})
+		
+	</insert>
+	
+	<!-- 로그인 -->
+	<!-- conunt는 int형으로 리턴 -->
+	<select id="selectUsersFindById" resultType="integer">
+	
+		SELECT count(*) FROM users WHERE id = #{id} AND pw = #{pw}
+	
+	</select>
+	
+	
+	<!-- 삭제 -->
+	<delete id="deleteUsers">
+	
+		DELETE FROM users
+		WHERE id = #{id}
+	
+	</delete>
+	
+<update id="updateUsers">
+	
+		UPDATE users
+		SET
+			name =#{name},
+			pw =#{pw}
+		WHERE id = #{id}
+	
+</update>
+
+<select id="selectUsers" resultType="com.example.demo.vo.UsersVO">
+		select * from users
+</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 </mapper>

@@ -35,6 +35,7 @@ import com.example.demo.vo.EmpVo;
 import com.example.demo.vo.Login;
 import com.example.demo.vo.Login2;
 import com.example.demo.vo.Movie;
+import com.example.demo.vo.UsersVO;
 
 // Rest : 자원 ( == 데이터 )
 @RestController
@@ -204,5 +205,38 @@ public class ApiController {
 	public int callDeptUpdate(@RequestBody DeptVO deptno) {
 		return empMapper.updateDept(deptno);
 	}
+	
+	// 회원가입
+	@PostMapping("/api/v1/users")
+	public int callUsersJoin(@RequestBody UsersVO vo) {
+		return empMapper.insertUsers(vo);
+	}
+	
+	// 로그인(조회)
+	@PostMapping("/api/v1/login")
+	public int callUserLogin(@RequestBody UsersVO vo) {
+		return empMapper.selectUsersFindById(vo);
+	}
+	
+	// 삭제
+	@DeleteMapping("/api/v1/users/{id}")
+	public int callIdDelete(@PathVariable String id){
+		return empMapper.deleteUsers(id);
+	}
+	
+	@GetMapping("/api/v1/users")
+	public List<UsersVO> callusers(){
+		return empMapper.selectUsers();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

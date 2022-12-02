@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.vo.DeptVO;
 import com.example.demo.vo.EmpVo;
+import com.example.demo.vo.UsersVO;
 
 /*
  * 추상 클래스와 인터페이스 차이점
@@ -82,4 +83,29 @@ public interface EmpMapper {
 	 * @comment : dept 수정
 	 */
 	int updateDept(DeptVO vo);
+	
+	
+	// 회원가입
+	int insertUsers(UsersVO vo);
+	
+	// 로그인
+	/**
+	 * @Since : 2022. 12. 2.
+	 * @Author : 미스터 빈
+	 * @Return : int 	
+	 * @comment : 회원인지 아닌지 체크
+	 */
+	int selectUsersFindById(UsersVO vo);
+	
+	//삭제
+	int deleteUsers(String id);
+	
+	// 찾기
+	/**
+	 * @Since : 2022. 12. 2.
+	 * @Author : 미스터 빈
+	 * @Return : List<UsersVO> 	
+	 * @comment : 찾기
+	 */
+	List<UsersVO> selectUsers();
 }

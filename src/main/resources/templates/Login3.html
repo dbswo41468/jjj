@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h3>DW 회원가입</h3>
+	<input id='userId'  type="text" placeholder="아이디를 입력해주세요"/>
+	<input id='userName'  type="text" placeholder="이름을 입력해주세요"/>
+	<input id='userPw'  type="text" placeholder="비밀번호를 입력해주세요"/>
+	<button type="button" onclick="doJoin()">회원가입</button>
+	
+	<h3>DW 로그인</h3>
+	<input id='i_userId'  type="text" placeholder="아이디를 입력해주세요"/>
+	<input id='i_userPw'  type="password" placeholder="비밀번호를 입력해주세요"/>
+	<button type="button" onclick="doLogin()">로그인</button>
+	
+	<input id='d_userId'  type="text" placeholder="아이디를 입력해주세요"/>
+	<button type="button" onclick="doDelete()">삭제</button>
+	
+	
+	
+</body>
+<script
+	src="https://code.jquery.com/jquery-3.6.1.js"
+	   integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+	   crossorigin="anonymous"></script>
+	   
+	   
+<script type="text/javascript">
+
+	function doLogin(){
+		
+		var id = $('#i_userId').val();
+		var pw = $('#i_userPw').val();
+		
+		var jsonData = {
+				"id" : id,
+				"pw" : pw
+			};
+		$.ajax({
+		    url: "/api/v1/login",
+		    type : 'POST',
+		    contentType : 'application/json',
+		    data : JSON.stringify(jsonData),
+		    dataType: 'json',
+			success: function (response) {
+			console.log(response);
+				if(response == 1){
+				  // 페이지 이동 로직 구현
+				  location.href = "/users";
+				}
+				else{
+				   alert("아이디 혹은 비밀번호가 틀렸습니다")
+				}
+			}
+	   });
+	}
+	
+
+	function doJoin(){
+		var id = $('#userId').val();
+		var na = $('#userName').val();
+		var pw = $('#userPw').val();
+		// 자바스크립트를 이용해 빈칸 체크하기
+		
+		
+		let arr = [id,na,pw];
+		const ARR = ["아이디","이름","비밀번호"];
+		
+		for(var i in arr){
+			if(arr[i] == ''){
+				alert(ARR[i] + "를 입력해주세요");
+				return;
+			}
+		}
+		
+		var jsonData = {
+				"id" : id,
+				"name" : na,
+				"pw" : pw
+
+			};
+			
+			$.ajax({
+			        url: '/api/v1/users',
+			        type : 'POST',
+			        contentType : 'application/json', // 서버에 json 타입으로 보낼 예정 (요청)
+			        data : JSON.stringify(jsonData),
+			        dataType: 'json',
+				    success: function (response) {
+				        	console.log(response); 
+				        	alert("추가 완료");
+				        	location.reload(); // 강제 새로고침
+				        }
+		     });
+	}
+	
+	function doDelete(){
+		
+		var did = $('#d_userId').val();
+
+			
+			$.ajax({
+	 	        url: '/api/v1/users/'+did,
+	 	        type : 'DELETE',
+	 	        dataType: 'json',
+	 		    success: function (response) {
+	 		        	alert("삭제");
+	 		        	location.reload(); // 강제 새로고침
+	 		        }
+	         });
+		}
+	
+</script>
+
+
+</html>

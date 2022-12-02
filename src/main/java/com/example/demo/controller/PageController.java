@@ -46,6 +46,19 @@ public class PageController {
 		return "login";
 	}
 	
+	@GetMapping("/login3")
+	public String callLogin3Page() {
+		// return 에 html 파일 이름을 작성
+		return "login3";
+	}
+	
+	// 페이지 이동
+	@GetMapping("/users")
+	public String callUsersPage(){
+		return "users";
+	}
+	
+	
 //	@GetMapping("/dept")
 //	public String callLogin2Page(HttpServletRequest request) {
 //		String ip = request.getRemoteAddr(); // IP 추적
@@ -62,5 +75,7 @@ public class PageController {
 	public String callDeptPage() {
 		return "dept";
 	}
+	
+	
 	
 }
