@@ -108,4 +108,7 @@ public interface EmpMapper {
 	 * @comment : 찾기
 	 */
 	List<UsersVO> selectUsers();
+	
+	UsersVO selectUsersPassword(String id);
+	
 }

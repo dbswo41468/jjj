@@ -1,24 +1,15 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
-/*
- * Controller는 페이지 이동
- * 
- * 
- */
 import java.util.HashMap;
-/*
- *  RestController 와 Controller 차이점
- *  
- *  Controller는 페이지(html) 이동
- *  RestController 데이터(JSON) 전송
- */
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,17 +28,32 @@ import com.example.demo.vo.Login2;
 import com.example.demo.vo.Movie;
 import com.example.demo.vo.UsersVO;
 
+/*
+ * RestController와 Controller 차이점
+ * 
+ * Controller는 페이지(html) 이동
+ * RestController는 데이터(JSON) 전송
+ * 
+ * Controller는 사용자 요청(URL 요청)을 처리하는 class
+ * Controller에서 로직을 구현 X
+ */
+
 // Rest : 자원 ( == 데이터 )
 @RestController
 public class ApiController {
 	
+	final String ROOT_URL = "/api/v1";
+	
+	
+	//@Autowired : Spring에서 객체를 관리함 (IoC : Inversion of Control 제어 역전) 
 	@Autowired
-	ApiService apiService;
+	ApiService apiService; //클래스를 전역변수로
 	
 	@Autowired
 	EmpMapper empMapper;
 	
-	
+	@Autowired
+	PasswordEncoder passwordEncoder; 
 	
 	/*
 	 * 클래스 이름 : 앞에 대문자로 시작 ex) Apple (o) apple (x)
@@ -206,16 +212,47 @@ public class ApiController {
 		return empMapper.updateDept(deptno);
 	}
 	
-	// 회원가입
+	// 회원가입 
 	@PostMapping("/api/v1/users")
 	public int callUsersJoin(@RequestBody UsersVO vo) {
+		String password = vo.getPw(); // HTML에사 입력 받은 비밀번호 가져오기
+		password = passwordEncoder.encode(password); // 비밀번호 암호화(SHA-1)
+		vo.setPw(password); // 암호화된 비밀번호 set!
 		return empMapper.insertUsers(vo);
 	}
 	
 	// 로그인(조회)
+	// 세션 : 서버(자바 서블릿 컨테이너)에 임시적으로 데이터를 저장함
 	@PostMapping("/api/v1/login")
-	public int callUserLogin(@RequestBody UsersVO vo) {
-		return empMapper.selectUsersFindById(vo);
+	public UsersVO callUserLogin(@RequestBody UsersVO vo, HttpServletRequest req) {
+		
+		String password = vo.getPw(); // HTML에서 가져온 패스워드
+		
+		vo = empMapper.selectUsersPassword(vo.getId());
+		// 아이디 틀리면 vo에 null 들어감
+		if(vo==null) {
+			vo = new UsersVO();
+			vo.setUser(false);
+			return vo;
+		}
+		
+		String DBpassword = vo.getPw(); // 데이터 베이스에서 저장된 내 비밀번호 가져옴
+		
+		boolean isUser = passwordEncoder.matches(password, DBpassword);
+		
+		if(!isUser) {
+			vo.setUser(false);
+			return vo;
+		}
+		// 고객 정보 세션에 넣기
+		HttpSession session = req.getSession(); // 세션 불러오기
+		System.out.println(req.getSession().getId());
+		// 세션은 key와 value로 구성 (HashMap과 동일)
+		// 세션은 서버가 종료될 때 까지 유지됨(디폴트로 가지고 있는 시간은 30분)
+		session.setAttribute("name", vo.getName()); // 세션에 사용자 이름 저장
+		
+		vo.setUser(true);
+		return vo;
 	}
 	
 	// 삭제
@@ -229,7 +266,11 @@ public class ApiController {
 		return empMapper.selectUsers();
 	}
 	
-	
+	// 아이디 중복 체크
+	@GetMapping("/api/v1/users/{id}")
+	public boolean callUser(@PathVariable String id) {
+		return apiService.checkUser(id);
+	}
 	
 	
 	
